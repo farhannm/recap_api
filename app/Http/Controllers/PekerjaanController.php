@@ -82,7 +82,7 @@ class PekerjaanController extends Controller
 
     public function getSelectedPekerjaan($id)
     {
-        $data = Pekerjaan::select('bulan', 'start', 'end', 'total_jam')->where('id', $id)->first();
+        $data = Pekerjaan::select('bulan', 'start', 'jam_toleransi', 'end', 'total_jam')->where('id', $id)->first();
  
         if ($data == null) {
             return response()->json([

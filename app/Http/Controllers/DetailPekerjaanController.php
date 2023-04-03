@@ -75,48 +75,6 @@ class DetailPekerjaanController extends Controller
         //
     }
 
-    public function updateTask(Request $request, DetailPekerjaan $detail)
-    {
-        //define validation rules
-        $validator = Validator::make($request->all(), [
-            'title'     => 'required',
-            'content'   => 'required',
-        ]);
-
-        //check if validation fails
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
-        }
-
-        //check if image is not empty
-        if ($request->hasFile('image')) {
-
-            //upload image
-            $image = $request->file('image');
-            $image->storeAs('public/posts', $image->hashName());
-
-            //delete old image
-            Storage::delete('public/posts/'.$detail->image);
-
-            //update post with new image
-            $detail->update([
-                'image'     => $image->hashName(),
-                'title'     => $request->title,
-                'content'   => $request->content,
-            ]);
-
-        } else {
-
-            //update post without image
-            $detail->update([
-                'title'     => $request->title,
-                'content'   => $request->content,
-            ]);
-        }
-
-        //return response
-        return new DetailPekerjaan([true, 'Data Post Berhasil Diubah!', $detail]);
-    }
 
     public function update(Request $request, $id)
     {
@@ -177,21 +135,7 @@ class DetailPekerjaanController extends Controller
 
     public function destroy($id)
     {
-        $user = User::select('users.*')
-            ->where('id', $id)
-            ->from('users')
-            ->first();
-
-        $pk = DetailPekerjaan::select('detail_pekerjaan.*')
-            ->where('id', $id)
-            ->from('detail_pekerjaan')
-            ->first();
-        
-        $detail = DetailPekerjaan::select('detail_pekerjaan.*')
-            ->join('users', 'users.id', '=', 'detail_pekerjaan.id_user')
-            ->join('pekerjaan', 'pekerjaan.id', '=', 'detail_pekerjaan.id_pekerjaan')
-            ->where('detail_pekerjaan.id', $pk->id)
-            ->delete();
+        $detail = DetailPekerjaan::where('id', $id)->delete();
  
             return response()->json([
                 'code' => 0,
