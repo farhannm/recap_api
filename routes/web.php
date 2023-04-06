@@ -17,10 +17,12 @@ $router->group( ['prefix' => 'api', 'middleware' => 'admin'] , function() use($r
     //User
     $router->post('register', 'AuthController@register');
     $router->get('user', 'UserController@index');
+    $router->get('user-by-pekerjaan/{id}', 'UserController@userByPekerjaan');
     $router->get('user-current-month/{id}', 'UserController@getCurrentMonth');
     $router->get('user-today-task/{id}', 'UserController@getTodayTask');
     $router->get('user-count-today-task/{id}', 'UserController@countTodayTask');
     $router->get('user-task-by-month/{id}/{id_pk}', 'UserController@userTaskByMonth');
+    $router->get('user-task-by-id/{id}/{id_pk}', 'UserController@userTaskById');
     $router->get('user-total-by-month/{id}/{id_pk}', 'UserController@getSelectedTotalJam');
     $router->get('count-karyawan',  'UserController@countKaryawan');
     $router->get('user/{id}', 'UserController@show');

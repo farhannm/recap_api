@@ -14,7 +14,7 @@ class PekerjaanController extends Controller
     
     public function index()
     {
-        $data = Pekerjaan::select('pekerjaan.*')
+        $data = Pekerjaan::select('pekerjaan.*', DB::raw('DATE_FORMAT(start, "%d %b, %Y") as mulai'), DB::raw('DATE_FORMAT(end, "%d %b, %Y") as berakhir'))
             ->from('pekerjaan')
             ->get();
  
@@ -34,10 +34,14 @@ class PekerjaanController extends Controller
 
     public function currentMonth()
     {
-        $data = Pekerjaan::select('pekerjaan.*')
+        $data = Pekerjaan::select('pekerjaan.*', DB::raw('DATE_FORMAT(start, "%d %b, %Y") as mulai'), DB::raw('DATE_FORMAT(end, "%d %b, %Y") as berakhir'))
             ->from('pekerjaan')
             ->where('bulan', $this->convertMonth(date('n')))
             ->first();
+
+        $newDateFormat = $data->start->format('j F, Y');
+
+        // dd($newDateFormat);
  
         if ($data == null) {
             return response()->json([
@@ -82,7 +86,8 @@ class PekerjaanController extends Controller
 
     public function getSelectedPekerjaan($id)
     {
-        $data = Pekerjaan::select('bulan', 'start', 'jam_toleransi', 'end', 'total_jam')->where('id', $id)->first();
+        $data = Pekerjaan::select('bulan', 'jam_toleransi', 'total_jam', DB::raw('DATE_FORMAT(start, "%d %b, %Y") as mulai'), DB::raw('DATE_FORMAT(end, "%d %b, %Y") as berakhir'))
+            ->where('id', $id)->first();
  
         if ($data == null) {
             return response()->json([
@@ -231,5 +236,12 @@ class PekerjaanController extends Controller
 
         $convert = $bulan[$value-1];
         return $convert;
+    }
+
+    private function convertDate($date)
+    {
+        $date = date('j F, Y');
+        return $date;
+
     }
 }

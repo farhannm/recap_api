@@ -42,7 +42,7 @@ class DatabaseSeeder extends Seeder
         \App\Models\User::create([
             'id_role' => 2,
             'nama' => 'Farhan Maulana',
-            'email' => 'farhannote41@gmail.com@gmail.com',
+            'email' => 'farhannote41@gmail.com',
             'password' => Hash::make('paanmaul'),
             'telp' => '08990632122',
             'alamat' => 'Cihanjuang',

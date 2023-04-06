@@ -213,6 +213,70 @@ class UserController extends Controller
         }
     }
 
+    public function userByPekerjaan($id)
+    {   
+
+        $pk =  Pekerjaan::select('pekerjaan.*')
+        ->where('id', $id)
+        ->from('pekerjaan')
+        ->first();
+
+        $detail = DetailPekerjaan::select('detail_pekerjaan.id_pekerjaan', 'users.*')
+            ->join('pekerjaan', 'pekerjaan.id', '=', 'detail_pekerjaan.id_pekerjaan')
+            ->join('users', 'users.id', '=', 'detail_pekerjaan.id_user')
+            ->where('id_pekerjaan', $pk->id)
+            ->groupBy('users.id')
+            ->get();
+ 
+        if ($detail == null) {
+            return response()->json([
+                'code' => 200,
+                'message' => 'Tidak ada data task bulanan.',
+            ]);
+        } else {
+            return response()->json([
+                'code' => 200,
+                'message' => 'Berhasil mengakses.',
+                'data' => $detail
+            ]);
+        }
+    }
+
+
+    public function userTaskById($id, $id_pk)
+    {   
+        $user = User::select('users.*')
+            ->where('id', $id)
+            ->from('users')
+            ->first();
+
+        $pk =  Pekerjaan::select('pekerjaan.*')
+        ->where('id', $id_pk)
+        ->from('pekerjaan')
+        ->first();
+
+        $detail = DetailPekerjaan::select('users.id', DB::raw('detail_pekerjaan.*'))
+            ->join('pekerjaan', 'pekerjaan.id', '=', 'detail_pekerjaan.id_pekerjaan')
+            ->join('users', 'users.id', '=', 'detail_pekerjaan.id_user')
+            ->where('users.id', $user->id)
+            ->where('pekerjaan.id', $pk->id)
+            ->get();
+ 
+        if ($detail == null) {
+            return response()->json([
+                'code' => 200,
+                'message' => 'Tidak ada data task bulanan.',
+            ]);
+        } else {
+            return response()->json([
+                'code' => 200,
+                'message' => 'Berhasil mengakses.',
+                'data' => $detail
+            ]);
+        }
+    }
+
+
     public function create()
     {
         //

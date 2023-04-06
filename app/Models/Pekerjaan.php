@@ -12,7 +12,10 @@ class Pekerjaan extends Model
     use HasFactory;
 
     protected $table = 'pekerjaan';
-
+    protected $casts = [
+        'start' => 'datetime',
+        'end' => 'datetime'
+     ];
 
     public function user() : BelongsTo
     {
